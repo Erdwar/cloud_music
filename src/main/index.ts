@@ -1,26 +1,58 @@
-import { app, shell, BrowserWindow } from 'electron'
+import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import icon from '../../resources/cloud-logo.png?asset'
 
+//关闭安全警告
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: 915,
+    height: 600,
+    minHeight: 600,
+    minWidth: 915,
+    frame: false,
     show: false,
-    autoHideMenuBar: true,
+    icon,
+    // autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
     }
   })
+  //最大化
+  ipcMain.on('MaxScreen', () => {
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) {
+      if (win.isMaximized()) {
+        win.unmaximize()
+      } else {
+        win.maximize()
+      }
+    }
+  })
+  //最小化
+  ipcMain.on('MinScreen', () => {
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) {
+      win.minimize()
+    }
+  })
+  //关闭
+  ipcMain.on('CloseScreen', () => {
+    app.exit()
+  })
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
-
+  ipcMain.on('ScreenResize', (event) => {
+    event.reply('isMaxScreen', BrowserWindow.getFocusedWindow()?.isMaximized())
+    // console.log(BrowserWindow.getFocusedWindow()?.isMaximized());
+    
+  })
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
