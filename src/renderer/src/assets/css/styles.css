@@ -1,0 +1,98 @@
+@font-face {
+  font-family: "iconfont";
+  /* Project id 4413559 */
+  src: url('//at.alicdn.com/t/c/font_4413559_qhhpf16jb2d.woff2?t=1705563296148') format('woff2'), url('//at.alicdn.com/t/c/font_4413559_qhhpf16jb2d.woff?t=1705563296148') format('woff'), url('//at.alicdn.com/t/c/font_4413559_qhhpf16jb2d.ttf?t=1705563296148') format('truetype');
+}
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-search:before {
+  content: "\e624";
+}
+.icon-shezhi:before {
+  content: "\e600";
+}
+.icon-left:before {
+  content: "\e603";
+}
+.icon-right:before {
+  content: "\e61f";
+}
+.icon-zuidahua:before {
+  content: "\e65d";
+}
+.icon-zhuti:before {
+  content: "\e91e";
+}
+.icon-yuyin:before {
+  content: "\e8f7";
+}
+.icon-rescreen:before {
+  content: "\e601";
+}
+.icon-youjian:before {
+  content: "\ebca";
+}
+.icon-zuixiaohua:before {
+  content: "\ea6a";
+}
+.icon-guanbi:before {
+  content: "\e62a";
+}
+.icon-minimoshi:before {
+  content: "\e69c";
+}
+.icon-logo:before {
+  content: "\e675";
+}
+.ant-input-affix-wrapper {
+  height: 100%;
+  border-radius: 15px;
+  overflow: hidden;
+}
+.ant-input-affix-wrapper ant-input:placeholder-shown {
+  background-color: transparent !important;
+}
+body {
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', sans-serif;
+  margin: 0 !important;
+}
+* {
+  padding: 0;
+  margin: 0;
+}
+ul {
+  list-style: none;
+}
+code {
+  font-weight: 600;
+  padding: 3px 5px;
+  border-radius: 2px;
+  background-color: #26282e;
+  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+  font-size: 85%;
+}
+a {
+  color: #9feaf9;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  outline: none;
+}
+a:hover {
+  border-bottom: 1px solid;
+}
+#app {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+button {
+  -webkit-app-region: no-drag;
+}

@@ -1,7 +1,9 @@
 import { resolve } from 'path'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import vue from '@vitejs/plugin-vue'
-
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 export default defineConfig({
   main: {
     plugins: [externalizeDepsPlugin()]
@@ -12,9 +14,32 @@ export default defineConfig({
   renderer: {
     resolve: {
       alias: {
-        '@renderer': resolve('src/renderer/src')
+        '@renderer': resolve('src/renderer/src'),
+        '@comp': resolve('src/renderer/src/components'),
+        '@assets': resolve('src/renderer/assets')
       }
     },
-    plugins: [vue()]
+    plugins: [
+      vue(),
+      AutoImport({
+        resolvers: [ElementPlusResolver()]
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()]
+      })
+    ],
+    css: {
+      preprocessorOptions: {
+        less: {
+          // math: 'always',
+          // additionalData: `@import "./src/renderer/src/assets/css/styles.less";`,
+          globalVars: {
+            'primary-color': '#1DA57A'
+          },
+          modifyVars: {},
+          javascriptEnabled: true
+        }
+      }
+    }
   }
 })
