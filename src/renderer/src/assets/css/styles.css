@@ -1,7 +1,7 @@
 @font-face {
   font-family: "iconfont";
   /* Project id 4413559 */
-  src: url('//at.alicdn.com/t/c/font_4413559_qhhpf16jb2d.woff2?t=1705563296148') format('woff2'), url('//at.alicdn.com/t/c/font_4413559_qhhpf16jb2d.woff?t=1705563296148') format('woff'), url('//at.alicdn.com/t/c/font_4413559_qhhpf16jb2d.ttf?t=1705563296148') format('truetype');
+  src: url('//at.alicdn.com/t/c/font_4413559_erhqxjs768h.woff2?t=1706575747110') format('woff2'), url('//at.alicdn.com/t/c/font_4413559_erhqxjs768h.woff?t=1706575747110') format('woff'), url('//at.alicdn.com/t/c/font_4413559_erhqxjs768h.ttf?t=1706575747110') format('truetype');
 }
 .iconfont {
   font-family: "iconfont" !important;
@@ -9,6 +9,42 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.icon-erweimadenglu:before {
+  content: "\e8b8";
+}
+.icon-playCount:before {
+  content: "\ea6d";
+}
+.icon-bofang:before {
+  content: "\e87c";
+}
+.icon-xiangxia:before {
+  content: "\e614";
+}
+.icon-jiahao:before {
+  content: "\e727";
+}
+.icon-youjiantou:before {
+  content: "\e602";
+}
+.icon-logo:before {
+  content: "\e604";
+}
+.icon-xiazai:before {
+  content: "\e856";
+}
+.icon-xindong:before {
+  content: "\e608";
+}
+.icon-shoucang:before {
+  content: "\e666";
+}
+.icon-love:before {
+  content: "\e66b";
+}
+.icon-zuijin:before {
+  content: "\e681";
 }
 .icon-search:before {
   content: "\e624";
@@ -46,9 +82,6 @@
 .icon-minimoshi:before {
   content: "\e69c";
 }
-.icon-logo:before {
-  content: "\e675";
-}
 .ant-input-affix-wrapper {
   height: 100%;
   border-radius: 15px;
@@ -57,9 +90,23 @@
 .ant-input-affix-wrapper ant-input:placeholder-shown {
   background-color: transparent !important;
 }
+:root {
+  --theme-color: #9feaf9;
+  --theme-background-color: #26282e;
+}
+@media (max-width: 1200px) {
+  html {
+    font-size: 62.5%;
+  }
+}
+@media screen and (min-width: 1300px) {
+  html {
+    font-size: 100%;
+  }
+}
 body {
   font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', sans-serif;
-  margin: 0 !important;
+  user-select: none;
 }
 * {
   padding: 0;
@@ -82,9 +129,6 @@ a {
   cursor: pointer;
   text-decoration: none;
   outline: none;
-}
-a:hover {
-  border-bottom: 1px solid;
 }
 #app {
   height: 100vh;

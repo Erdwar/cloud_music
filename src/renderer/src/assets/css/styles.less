@@ -1,5 +1,24 @@
 @import url('fonts.less');
 @import url('antStyle.less');
+
+:root {
+  --theme-color: #9feaf9;
+  --theme-background-color: #26282e;
+}
+
+@media (max-width: 1200px) {
+  html {
+    font-size: 62.5%;
+  }
+}
+
+@media screen and (min-width: 1300px) {
+  html {
+    font-size: 100%;
+  }
+
+}
+
 body {
   // -webkit-app-region: drag;
   font-family:
@@ -13,7 +32,8 @@ body {
     'Cantarell',
     'Open Sans',
     sans-serif;
-  margin: 0 !important;
+  user-select: none;
+
 }
 
 * {
@@ -49,9 +69,9 @@ a {
   outline: none;
 }
 
-a:hover {
-  border-bottom: 1px solid;
-}
+// a:hover {
+//   border-bottom: 1px solid;
+// }
 
 #app {
   height: 100vh;

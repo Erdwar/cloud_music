@@ -1,19 +1,24 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
+import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
+import { join, resolve } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/cloud-logo.png?asset'
+import { execSync } from 'child_process'
+import { session } from 'electron'
 
 //关闭安全警告
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
+
+const winUrl = process.env.NODE_ENV === 'development' ? `http://localhost:5173` : ''
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 915,
-    height: 600,
-    minHeight: 600,
-    minWidth: 915,
+    width: 1050,
+    height: 650,
+    minHeight: 650,
+    minWidth: 1050,
     frame: false,
     show: false,
+    resizable: false,
     icon,
     // autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -51,8 +56,53 @@ function createWindow(): void {
   ipcMain.on('ScreenResize', (event) => {
     event.reply('isMaxScreen', BrowserWindow.getFocusedWindow()?.isMaximized())
     // console.log(BrowserWindow.getFocusedWindow()?.isMaximized());
-    
   })
+  ipcMain.on('win-start', (e) => {
+    const winposition = mainWindow.getPosition()
+    const cursorPosition = screen.getCursorScreenPoint()
+    console.log(winposition)
+    const x = cursorPosition.x - winposition[0]
+    const y = cursorPosition.y - winposition[1]
+    e.returnValue = JSON.stringify({ x, y })
+  })
+  ipcMain.on('win-move', (_, params) => {
+    const param = JSON.parse(params)
+    console.log(param, 'param')
+
+    mainWindow.setPosition(param.x, param.y, true)
+    mainWindow.setSize(1050, 650, true)
+  })
+  ipcMain.on('login', () => {
+    //调用 BrowserWindow打开新窗口
+    const win2 = new BrowserWindow({
+      width: 300,
+      height: 500,
+      parent: mainWindow,
+      resizable: false,
+      frame: false,
+      icon,
+      webPreferences: {
+        // nodeIntegration: true,
+        // contextIsolation: false,
+        preload: join(__dirname, '../preload/index.js'),
+        sandbox: false
+      }
+    })
+    //test页面路由
+    win2.loadURL(winUrl + '/#/login/QRcodeLogin')
+    win2.on('ready-to-show', () => {
+      win2.show()
+    })
+    ipcMain.on('closeLogin', () => {
+      win2.destroy()
+    })
+    ipcMain.on('toWebLogin', (e, url) => {
+      e.preventDefault()
+      execSync(`start ${url}`)
+    })
+    // win2.webContents.openDevTools()
+  })
+
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
@@ -70,10 +120,13 @@ function createWindow(): void {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
-
+  //引入devtools
+  if (process.env.NODE_ENV === 'development') {
+    await session.defaultSession.loadExtension(resolve(__dirname, '../../devtools/6.5.1_0'))
+  }
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils

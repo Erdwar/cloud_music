@@ -4,7 +4,8 @@
     "src/renderer/src/env.d.ts",
     "src/renderer/src/**/*",
     "src/renderer/src/**/*.vue",
-    "src/preload/*.d.ts"
+    "src/preload/*.d.ts",
+    "./src/renderer/auto-imports.d.ts"
   ],
   "compilerOptions": {
     "composite": true,
@@ -12,6 +13,9 @@
     "paths": {
       "@renderer/*": [
         "src/renderer/src/*"
+      ],
+      "@api/*": [
+        "src/renderer/src/api/*"
       ]
     }
   }
