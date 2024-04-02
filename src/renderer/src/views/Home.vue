@@ -1,10 +1,10 @@
 <template>
   <div class="content">
-    <HeadBar />
+    <HeadBar ref="head" />
     <div class="detail-content">
       <SideBar />
       <div class="main">
-        <router-view></router-view>
+        <Suspense><router-view></router-view></Suspense>
       </div>
     </div>
     <FloorBar />
@@ -14,11 +14,12 @@
 import FloorBar from '@comp/Base/FlootBar.vue'
 import HeadBar from '@comp/Base/HeadBar.vue'
 import SideBar from '@comp/Base/SideBar.vue'
-import { onMounted } from 'vue'
+
 // import { useUserStore } from '@renderer/store/user'
 // import { getCookie } from '@renderer/utils/cookie'
 // const userStore = useUserStore()
 onMounted(() => {
+  // windowDrag()
   // if (!getCookie()) {
   //   userStore.touristLogin()
   // }
@@ -36,7 +37,6 @@ onMounted(() => {
 }
 .detail-content {
   box-sizing: border-box;
-  padding: 0 5px;
   flex: 1;
   width: 100%;
   display: grid;

@@ -1,5 +1,7 @@
 <template>
-  <div class="floor-content"></div>
+  <div class="floor-content">
+    
+  </div>
 </template>
 <script setup lang="ts"></script>
 <style lang="less" scoped>

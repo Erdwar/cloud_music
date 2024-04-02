@@ -1,5 +1,7 @@
 <template>
-  <div class="title" @click="router.push({ name: pathName })">{{ title }} ></div>
+  <div class="title" @click="router.push({ name: pathName })">
+    {{ title }} <span class="iconfont icon-right"></span>
+  </div>
 </template>
 <script setup lang="ts">
 import { useRouter } from 'vue-router'

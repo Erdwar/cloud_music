@@ -4,6 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/cloud-logo.png?asset'
 import { execSync } from 'child_process'
 import { session } from 'electron'
+import fs from 'fs'
 
 //关闭安全警告
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -124,7 +125,10 @@ app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
   //引入devtools
-  if (process.env.NODE_ENV === 'development') {
+  if (
+    process.env.NODE_ENV === 'development' &&
+    fs.existsSync(resolve(__dirname, '../../devtools/6.5.1_0'))
+  ) {
     await session.defaultSession.loadExtension(resolve(__dirname, '../../devtools/6.5.1_0'))
   }
   // Default open or close DevTools by F12 in development

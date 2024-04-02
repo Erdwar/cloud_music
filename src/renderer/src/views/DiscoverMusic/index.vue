@@ -5,8 +5,8 @@
         v-for="item in navList"
         :key="item.id"
         class="nav-item"
-        :class="selectId === item.id ? 'active' : ''"
-        @click="goTo(item.path, item.id)"
+        :class="selectPath === item.path ? 'active' : ''"
+        @click="goTo(item.path)"
       >
         <div class="nav-item-title">{{ item.name }}</div>
       </div>
@@ -19,10 +19,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { navListType } from './type'
-import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const selectId = ref(0)
+const selectPath = ref('')
+const route = useRoute()
+//监听路由路径以方便更改导航
+watch(
+  () => route.path,
+  () => {
+    selectPath.value = route.path.split('/')[2]
+  },
+  { immediate: true }
+)
+
 const navList: Array<navListType> = [
   {
     id: 0,
@@ -55,9 +64,8 @@ const navList: Array<navListType> = [
     path: 'newestSongs'
   }
 ]
-
-const goTo = (path: string, id: number) => {
-  selectId.value = id
+const goTo = (path: string) => {
+  selectPath.value = path
   router.push({ name: path })
 }
 </script>

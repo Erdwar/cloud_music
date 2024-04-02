@@ -4,6 +4,7 @@
 :root {
   --theme-color: #9feaf9;
   --theme-background-color: #26282e;
+  --el-color-primary:#ff6666 !important;
 }
 
 @media (max-width: 1200px) {
@@ -12,12 +13,12 @@
   }
 }
 
-@media screen and (min-width: 1300px) {
-  html {
-    font-size: 100%;
-  }
+// @media screen and (min-width: 1300px) {
+//   html {
+//     font-size: 100%;
+//   }
 
-}
+// }
 
 body {
   // -webkit-app-region: drag;
@@ -83,4 +84,11 @@ a {
 
 button {
   -webkit-app-region: no-drag;
+}
+
+.el-button{
+  --el-button-hover-text-color: #fff !important;
+  --el-button-hover-border-color: #ff6666 !important;
+  --el-button-hover-bg-color:#ff6666 !important;
+ 
 }

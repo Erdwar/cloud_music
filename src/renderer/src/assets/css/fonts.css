@@ -1,7 +1,7 @@
 @font-face {
   font-family: "iconfont";
   /* Project id 4413559 */
-  src: url('//at.alicdn.com/t/c/font_4413559_we9hk4fqx5n.woff2?t=1706858474265') format('woff2'), url('//at.alicdn.com/t/c/font_4413559_we9hk4fqx5n.woff?t=1706858474265') format('woff'), url('//at.alicdn.com/t/c/font_4413559_we9hk4fqx5n.ttf?t=1706858474265') format('truetype');
+  src: url('//at.alicdn.com/t/c/font_4413559_0tlfzl9mynq.woff2?t=1708505607595') format('woff2'), url('//at.alicdn.com/t/c/font_4413559_0tlfzl9mynq.woff?t=1708505607595') format('woff'), url('//at.alicdn.com/t/c/font_4413559_0tlfzl9mynq.ttf?t=1708505607595') format('truetype');
 }
 .iconfont {
   font-family: "iconfont" !important;
@@ -9,6 +9,21 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.icon-fenxiang1:before {
+  content: "\e626";
+}
+.icon-Reply:before {
+  content: "\e60a";
+}
+.icon-good:before {
+  content: "\e62b";
+}
+.icon-xihuan:before {
+  content: "\e86f";
+}
+.icon-xiazai1:before {
+  content: "\e623";
 }
 .icon-QQ:before {
   content: "\e65e";

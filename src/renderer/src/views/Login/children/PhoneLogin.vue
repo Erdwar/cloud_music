@@ -58,7 +58,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-button>获取验证码</el-button>
+            <div class="getCaptcha" @click="VgetCaptcha">
+              {{ verCodeFlag ? '获取验证码' : `${CountDown}s` }}
+            </div>
           </el-col>
         </el-row>
         <el-row v-else>
@@ -76,6 +78,7 @@
         </el-row>
       </el-form>
     </div>
+    <div v-show="errTips" class="errTips">{{ errTips }}</div>
     <div class="otherOperations">
       <div>
         <el-checkbox v-model="autoLogin">自动登录</el-checkbox>
@@ -90,7 +93,7 @@
       </div>
     </div>
     <div class="main-caozuo">
-      <el-button v-show="modelFlag !== 2">登录</el-button>
+      <el-button v-show="modelFlag !== 2" @click="login">登录</el-button>
       <div v-show="modelFlag !== 2" class="register" @click="modelFlag = 2">注册</div>
       <el-button v-show="modelFlag === 2">注册</el-button>
     </div>
@@ -111,7 +114,10 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useUserStore } from '@renderer/store/user'
+import { getCaptcha, checkoutCaptcha } from '@api/user'
 const router = useRouter()
+const store = useUserStore()
 interface formDataType {
   phone: string
   password?: string
@@ -120,9 +126,88 @@ interface formDataType {
 const modelFlag = ref(0) //0 密码登录 1 验证码登录 2 注册
 const location = ref('+86')
 const autoLogin = ref(true)
+const CountDown = ref(60)
 const formData = ref<formDataType>({ phone: '' })
+const timer = ref<NodeJS.Timeout>()
+const verCodeFlag = ref(true)
+const CaptchaColor = ref('#000')
+const errTips = ref('')
 const retureQR = () => {
   router.push({ name: 'QRcodeLogin' })
+}
+watch(modelFlag, () => {
+  formData.value = {
+    phone: '',
+    password: '',
+    captcha: ''
+  }
+  timer.value && clearInterval(timer.value)
+  verCodeFlag.value = true
+  CaptchaColor.value = '#000'
+  errTips.value = ''
+})
+const formCheckout = (): boolean => {
+  const regexp = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
+  if (!regexp.test(formData.value.phone)) {
+    errTips.value = '请输入正确的手机号'
+    return false
+  } else {
+    errTips.value = ''
+    return true
+  }
+}
+const VgetCaptcha = () => {
+  try {
+    if (!verCodeFlag.value) return
+    if (!formCheckout()) return
+    verCodeFlag.value = false
+    CaptchaColor.value = '#606266'
+    getCaptcha(formData.value.phone)
+    timer.value = setInterval(() => {
+      if (CountDown.value > 0) {
+        CountDown.value--
+      } else {
+        CaptchaColor.value = '#000'
+        verCodeFlag.value = true
+        CountDown.value = 60
+        clearInterval(timer.value)
+      }
+    }, 1000)
+  } catch (err) {
+    console.log(err)
+  }
+}
+const login = async () => {
+  try {
+    if (!formCheckout()) return
+    if (modelFlag.value === 0) {
+      if (!formData.value.password) {
+        errTips.value = '请输入密码'
+        return
+      }
+    } else if (modelFlag.value === 1) {
+      if (!formData.value.captcha) {
+        errTips.value = '请输入验证码'
+        return
+      }
+      const res = await checkoutCaptcha({
+        phone: formData.value.phone,
+        captcha: formData.value.captcha
+      })
+      if (!res) {
+        errTips.value = '验证码错误'
+        return
+      }
+    }
+    const state = await store.Alogin(formData.value)
+    if (state) {
+      console.log('登陆成功')
+    } else {
+      console.log('登陆失败')
+    }
+  } catch (err) {
+    console.log(err)
+  }
 }
 </script>
 <style lang="less" scoped>
@@ -172,6 +257,24 @@ const retureQR = () => {
         }
       }
     }
+    .getCaptcha {
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: v-bind(CaptchaColor);
+      border: 1px solid #dcdfe6;
+    }
+  }
+  .errTips {
+    width: 100%;
+    height: 2rem;
+    line-height: 2rem;
+    color: red;
   }
   .otherOperations {
     width: 100%;

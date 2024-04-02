@@ -10,16 +10,16 @@
       </template>
     </el-skeleton>
 
-    <!-- <div v-if="qrstatus !== 801 && qrstatus !== 803" class="status">
-        <div class="statusLabel">
-          <el-icon v-show="qrstatus === 800" class="icon is-loading" color="red"
-            ><i-ep-circle-close
-          /></el-icon>
-          <el-icon v-show="qrstatus === 802" class="icon is-loading"><i-ep-loading /></el-icon>
-        </div>
-        <el-button v-show="qrstatus === 800">重新获取</el-button>
+    <div v-if="qrstatus !== 801 && qrstatus !== 803" class="status">
+      <div class="statusLabel">
+        <el-icon v-show="qrstatus === 800" color="red"><i-ep-circle-close /></el-icon>
+        <el-icon v-show="qrstatus === 802" class="is-loading"><i-ep-loading /></el-icon>
+        <el-button v-show="qrstatus === 800" class="regain" @click="store.getQr"
+          >重新获取</el-button
+        >
         <div v-show="qrstatus === 802">确认中...</div>
-      </div> -->
+      </div>
+    </div>
   </div>
   <div class="tips">使用<a :href="qrurl" @click="toWebLogin">网易云音乐APP</a>扫码登录</div>
   <div class="other" @click="toPhoneLogin">选择其他登陆方式登录></div>
@@ -33,20 +33,21 @@ let timer: string | number | NodeJS.Timeout | undefined
 watch(qrstatus, () => {
   if (qrstatus.value === 803) {
     ElMessage.success('登录成功')
-    window.ipcRenderer.send('closeLogin')
+    // window.ipcRenderer.send('closeLogin')
   }
 })
+//前往web页面登陆
 const toWebLogin = (e: Event) => {
   e.preventDefault()
   window.ipcRenderer.send('toWebLogin', qrurl.value)
 }
+//前往手机登录
 const toPhoneLogin = () => {
   router.push({ name: 'PhoneLogin' })
 }
 onMounted(() => {
-  console.log(qrstatus.value)
   store.getQr()
-
+  //检查二维码状态
   timer = setInterval(() => {
     store.checkQrState()
   }, 300)
@@ -80,20 +81,29 @@ onBeforeUnmount(() => {
     height: 100%;
     top: 0;
     left: 0;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(255, 255, 255, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
     .statusLabel {
-      height: 30px;
+      height: 20px;
       width: 80%;
       display: flex;
-      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.4);
+      justify-content: space-evenly;
       align-items: center;
-      font-size: 1.8rem;
+      font-size: 1.2rem;
       .icon {
-        width: 30px;
-        height: 30px;
+        width: 20px;
+        height: 20px;
+      }
+      .regain {
+        border: none;
+        border-radius: 0;
+        color: red;
+        height: 20px;
+        background-color: transparent;
+        line-height: 20px;
       }
     }
   }

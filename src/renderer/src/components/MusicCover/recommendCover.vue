@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content" @click="goDetail(recommendMsg.id)">
     <div class="cover">
       <img :src="recommendMsg.picUrl + '?param=134y134'" alt="" srcset="" />
       <div class="play">
@@ -20,6 +20,7 @@
   </div>
 </template>
 <script setup lang="ts">
+const router = useRouter()
 interface recommendMsgType {
   picUrl: string
   playCount: number
@@ -32,6 +33,9 @@ defineProps({
     default: () => ({})
   }
 })
+const goDetail = (id: number) => {
+  router.push({ path: `/SongList/${id}` })
+}
 </script>
 <style lang="less" scoped>
 .content {

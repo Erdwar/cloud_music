@@ -16,3 +16,14 @@ export const getrecommendDaySongs = () => {
     url: `/recommend/songs?cookie=${getCookie()}`
   })
 }
+
+export const getSonglist = (data: { id: string }) => {
+  return request({
+    url: `/playlist/detail?id=${data.id}`
+  })
+}
+export const getSongListComments = (data: { id: string; limit: number; offset: number }) => {
+  return request({
+    url: `/comment/playlist?id=${data.id}&limit=${data.limit}&offset=${data.offset}`
+  })
+}

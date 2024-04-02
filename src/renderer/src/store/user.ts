@@ -1,6 +1,13 @@
 import { defineStore } from 'pinia'
-import { touristLoginApi, getQrImg, getQrKey, getQrState, getUserInfoMsg } from '@renderer/api/user'
-import { setCookie } from '@renderer/utils/cookie'
+import {
+  touristLoginApi,
+  getQrImg,
+  getQrKey,
+  getQrState,
+  getUserInfoMsg,
+  login
+} from '@renderer/api/user'
+import { setCookie, getCookie } from '@renderer/utils/cookie'
 // import { qrStateType } from './type'
 // import { touristLoginType } from './type'
 export const useUserStore = defineStore({
@@ -43,9 +50,11 @@ export const useUserStore = defineStore({
         const res: any = await getQrState({ key: this.qrkey })
         this.qrstatus = res.code
         if (this.qrstatus === 803) {
-          console.log('stop')
+          console.log(res.cookie, 'stop')
           setCookie(res.cookie)
-          // this.getUserInfo()
+          console.log(getCookie())
+
+          this.getUserInfo()
         }
       } catch (err) {
         console.log(err)
@@ -54,9 +63,21 @@ export const useUserStore = defineStore({
     async getUserInfo() {
       try {
         const res: any = await getUserInfoMsg()
-        setCookie(res.cookie)
+        console.log(res)
+
+        // setCookie(res.cookie)
       } catch (err) {
         console.log(err)
+      }
+    },
+    async Alogin(data: { phone: string; captcha?: string; password?: string }) {
+      try {
+        const res: any = await login(data)
+        setCookie(res.cookie)
+        return Promise.resolve(true)
+      } catch (err) {
+        console.log(err)
+        return Promise.resolve(false)
       }
     }
   }

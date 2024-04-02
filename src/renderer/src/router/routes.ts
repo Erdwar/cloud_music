@@ -23,6 +23,11 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/Home.vue'),
     children: [
       {
+        path: '/SongList/:id',
+        name: 'SongList',
+        component: () => import('../views/DiscoverMusic/SongList.vue')
+      },
+      {
         path: '/DiscoverMusic',
         name: 'DiscoverMusic',
         component: () => import('../views/DiscoverMusic/index.vue'),
@@ -54,11 +59,6 @@ export const routes: Array<RouteRecordRaw> = [
             path: '/singer',
             name: 'singer',
             component: () => import('../views/DiscoverMusic/children/singer.vue')
-          },
-          {
-            path: '/songsList',
-            name: 'songsList',
-            component: () => import('../views/DiscoverMusic/children/songsList.vue')
           }
         ]
       },

@@ -9,6 +9,9 @@ const request = axios.create({
 // 添加请求拦截器
 request.interceptors.request.use(
   function (config) {
+    if (config.method === 'post') {
+      config.url += `?tm=${new Date().getTime()}`
+    }
     return config
   },
   function (error) {
@@ -23,17 +26,15 @@ request.interceptors.response.use(
     if (res.status && res.status === 200) {
       return res.data
     }
-    console.log(res, 'res')
-
-    // ElMessage({ message: res.msg || res.statusText || '请求失败', type: 'warning' })
+    ElMessage({ message: res.msg || res.statusText || '请求失败', type: 'warning' })
     return Promise.reject(res)
   },
   (error: any) => {
     if (error.response) {
-      // const res = error.response
-      // ElMessage({ message: res, type: 'error' })
+      const res = error.response
+      ElMessage({ message: res, type: 'error' })
     } else {
-      // ElMessage({ message: '请检查网络连接状态', type: 'error' })
+      ElMessage({ message: '请检查网络连接状态', type: 'error' })
     }
     return Promise.reject(error.response)
   }

@@ -1,10 +1,18 @@
 <template>
-  <div class="head" @mousedown.self="winDown" @mousemove.self="winMove" @mouseup.self="winUp">
+  <div ref="head" class="head" @click.self="clickHead">
     <div class="head-left">
       <div class="iconfont icon-logo logo"></div>
       <div class="title">网易云音乐</div>
-      <div class="iconfont icon-left circlebg useble"></div>
-      <div class="iconfont icon-right circlebg useble"></div>
+      <div
+        class="iconfont icon-left circlebg"
+        :class="{ disabled: !isBack }"
+        @click="router.back()"
+      ></div>
+      <div
+        class="iconfont icon-right circlebg"
+        :class="{ disabled: !isForward }"
+        @click="router.forward()"
+      ></div>
       <div class="search">
         <a-input v-model="search" placeholder="Basic usage">
           <template #prefix>
@@ -43,6 +51,29 @@
         @click="MaxScreen()"
       ></div>
       <div class="iconfont icon-guanbi icon" @click="closeScreen()"></div>
+      <div v-show="showUser" class="userInfo">
+        <div class="user-state">
+          <div class="user-fans">
+            <div class="user-fans-item">
+              <div class="value">0</div>
+              <div class="label">动态</div>
+            </div>
+            <div class="user-fans-item">
+              <div class="value">0</div>
+              <div class="label">关注</div>
+            </div>
+            <div class="user-fans-item">
+              <div class="value">0</div>
+              <div class="label">粉丝</div>
+            </div>
+          </div>
+          <div class="qiandao"></div>
+        </div>
+        <div class="user-info-item">
+          <div class="left"></div>
+          <div class="right"></div>
+        </div>
+      </div>
     </div>
     <div
       v-show="isSetTheme"
@@ -64,16 +95,33 @@ import {
   RightOutlined,
   CaretDownOutlined
 } from '@ant-design/icons-vue'
+import drag from 'electron-drag'
+
+const router = useRouter()
+const route = useRoute()
 const search = ref('')
-const isdrag = ref('')
 const isSetTheme = ref(false)
 const loginState = ref(false)
 const isMaxScreen = ref(false)
 const ThemePicker = ref()
 const selectPickerFlag = ref(false)
-const canMoving = ref(false)
-//partial<> 定义为可选
-const positionXY = ref<{ x: number; y: number }>({ x: 0, y: 0 })
+const head = ref()
+const isForward = ref()
+const isBack = ref()
+const showUser = ref(false)
+let clear: any
+
+// const isForward = computed(() => {
+//   return router.c
+// })
+watch(
+  () => route.path,
+  () => {
+    isForward.value = router.options.history.state.forward
+    isBack.value = router.options.history.state.back
+  }
+)
+
 const dropdownData = [
   {
     key: '1',
@@ -94,28 +142,17 @@ const login = () => {
 const setTheme = () => {
   isSetTheme.value = true
 }
-const winDown = () => {
-  // canMoving.value = true
-  // const XY = window.ipcRenderer.sendSync('win-start')
-  // positionXY.value = JSON.parse(XY)
-  // console.log(positionXY.value)
-}
-const winMove = () => {
-  // if (isMaxScreen.value) return
-  // if (!canMoving.value) return
-  // console.log(e.screenX, e.screenY)
-  isdrag.value = 'drag'
-  // const params = {
-  //   x: e.screenX - positionXY.value.x,
-  //   y: e.screenY - positionXY.value.y,
-  //   height: window.innerHeight,
-  //   width: window.innerWidth
-  // }
-  // window.ipcRenderer.send('win-move', JSON.stringify(params))
-}
-const winUp = () => {
-  // canMoving.value = false
-  isdrag.value = 'no-drag'
+const windowDrag = (el: HTMLElement) => {
+  console.log(drag)
+
+  // Fallback to using -webkit-app-region property.
+  if (!drag.supported) {
+    console.log(131321)
+
+    el.style['-webkit-app-region'] = 'drag'
+  } else {
+    clear = drag(head)
+  }
 }
 const cancelSetTheme = () => {
   isSetTheme.value = false
@@ -134,9 +171,12 @@ const MinScreen = () => {
 const closeScreen = () => {
   window.ipcRenderer.send('CloseScreen')
 }
-
+const clickHead = () => {
+  console.log(123)
+}
 onMounted(() => {
-  console.log(window.innerWidth, window.innerHeight,11111111111)
+  console.log(router)
+  windowDrag(head.value)
   window.onresize = () => {
     window.ipcRenderer.send('ScreenResize')
   }
@@ -144,6 +184,9 @@ onMounted(() => {
   window.ipcRenderer.on('isMaxScreen', (_, data) => {
     isMaxScreen.value = data
   })
+})
+onBeforeUnmount(() => {
+  if (clear) clear()
 })
 </script>
 
@@ -158,7 +201,6 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 5px;
-  -webkit-app-region: v-bind(isdrag);
   & > div {
     display: flex;
     justify-content: center;
@@ -186,7 +228,7 @@ onMounted(() => {
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      &.useble {
+      &.disabled {
         color: #b1b1b1;
       }
     }
